@@ -48,7 +48,7 @@ class InvoiceController extends Controller
         $created = Invoice::create($validator->validated());
 
         if ($created) {
-            return $this->response('Invoice created successfully', 200, $created);
+            return $this->response('Invoice created successfully', 200, new InvoiceResource($created->load('user')));
         }
             return $this->error('Failed to create invoice', 400);
     }
