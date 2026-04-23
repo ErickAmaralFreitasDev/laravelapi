@@ -25,16 +25,16 @@ class InvoiceResource extends JsonResource
         $paid = $this->paid;
         return [
             'user' => [
-                'firstName' => $this->user->first_name,
-                'lastName' => $this->user->last_name,
-                'fullName' => $this->user->first_name . ' ' . $this->user->last_name,
+                'firstName' => $this->user->firstName,
+                'lastName' => $this->user->lastName,
+                'fullName' => $this->user->firstName . ' ' . $this->user->lastName,
                 'email' => $this->user->email,
             ],
             'type' => $this->types[$this->type] ?? 'Desconecido',
             'value' => 'R$ ' . number_format($this->value, 2, ',', '.'),
             'paid' => $paid ? 'Sim' : 'Não',
-            'paymentDate' => $paid ? Carbon::parse($this->paymentDate)->format('d/m/Y H:i:s') : null,
-            'paymentSince' => $paid ? Carbon::parse($this->paymentSince)->diffForHumans() : null,
+            'payment_date' => $paid ? Carbon::parse($this->payment_date)->format('d/m/Y H:i:s') : null,
+            'payment_since' => $paid ? Carbon::parse($this->payment_since)->diffForHumans() : null,
         ];
     }
 }
