@@ -15,9 +15,9 @@ class InvoiceController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return InvoiceResource::collection(Invoice::with('user')->get());
+        return (new Invoice())->filter($request);
     }
 
     /**
@@ -37,7 +37,7 @@ class InvoiceController extends Controller
             'user_id' => 'required',
             'type' => 'required|max:1',
             'paid' => 'required|numeric|between:0,1',
-            'paymentDate' => 'nullable',
+            'payment_date' => 'nullable',
             'value' => 'required|numeric|between:1,9999.99',
         ]);
 
