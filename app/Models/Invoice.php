@@ -31,7 +31,7 @@ class Invoice extends Model
         $queryFilter = (new InvoiceFilter)->filter($request);
 
 
-        if(empty($queryFilter)) {
+        if (empty($queryFilter['where']) && empty($queryFilter['whereIn'])) {
             return InvoiceResource::collection(Invoice::with('user')->get());
         }
 

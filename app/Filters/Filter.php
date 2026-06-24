@@ -30,20 +30,16 @@ abstract class Filter
         foreach ($this->allowedOperatorsFields as $param => $operators) {
             $queryOperator = $request->query($param);
 
-            if ($queryOperator) {
+            if ($queryOperator && is_array($queryOperator)) {
 
                 foreach ($queryOperator as $operator => $value) {
                     if (!in_array($operator, $operators)) {
                         throw new \Exception("The operator $operator is not allowed for the field $param");  
                     }
 
-                    if(str_contains($value, '[')){
-                        $whereIn[] =[
-                           $param,
-                           explode(',', str_replace(['[', ']'], ['', ''], $value)),
-                           $value 
-                        ];
-
+                    if($operator === 'in'){
+                        $values = explode(',', trim($value, '[]'));
+                        $whereIn[] = [$param, $values];
                     } else {
                         $where[] = [
                             $param,
@@ -53,15 +49,16 @@ abstract class Filter
                     }
                 }
 
-                if(empty($where) && empty($whereIn)) {
-                    return [];
-                }
-
-                return [
-                    'where' => $where,
-                    'whereIn' => $whereIn
-                ];
             }
         }
+        if(empty($where) && empty($whereIn)) {
+            return [];
+        }
+
+
+        return [
+            'where' => $where,
+            'whereIn' => $whereIn
+        ];
     }
 }
