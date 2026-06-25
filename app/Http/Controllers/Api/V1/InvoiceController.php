@@ -11,10 +11,16 @@ use App\Traits\HttpResponses;
 
 class InvoiceController extends Controller
 {
-    use HttpResponses; 
+    use HttpResponses;
     /**
      * Display a listing of the resource.
      */
+
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum')->only(['store', 'update']);
+    }
+
     public function index(Request $request)
     {
         return (new Invoice())->filter($request);
@@ -33,6 +39,10 @@ class InvoiceController extends Controller
      */
     public function store(Request $request)
     {
+        if(!auth()->user()->tokenCan('invoice-store')) {
+            return $this->error('You do not have permission to create invoices', 403);
+        }
+
         $validator = Validator::make($request->all(), [
             'user_id' => 'required',
             'type' => 'required|max:1',
@@ -74,6 +84,10 @@ class InvoiceController extends Controller
      */
     public function update(Request $request, Invoice $invoice)
     {
+        if(!auth()->user()->tokenCan('invoice-update')) {
+            return $this->error('You do not have permission to update invoices', 403);
+        }
+
         $validator = Validator::make($request->all(), [
             'user_id' => 'required',
             'type' => 'required|max:1|in:' . implode(',', ['B', 'C', 'P']),
