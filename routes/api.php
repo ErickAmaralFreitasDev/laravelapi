@@ -27,8 +27,8 @@ Route::prefix('v1')->group(function () {
     Route::apiResource('invoices', InvoiceController::class);
 
     Route::middleware('auth:sanctum')->group(function () {
-        Route::get('/teste', [TesteController::class, 'index']);
-        Route::get('/users/{user}', [UserController::class, 'show']);
+        Route::get('/teste', [TesteController::class, 'index'])->middleware('ability:teste-index');
+        Route::get('/users/{user}', [UserController::class, 'show'])->middleware('ability:user-get');
     });
 
     Route::post('/login', [AuthController::class, 'login']);
