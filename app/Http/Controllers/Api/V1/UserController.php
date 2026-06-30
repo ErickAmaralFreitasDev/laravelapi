@@ -6,12 +6,21 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Resources\V1\UserResource;
+use Illuminate\Support\Facades\Validator;
+use App\Traits\HttpResponses;
 
 class UserController extends Controller
 {
+    use HttpResponses;
     /**
      * Display a listing of the resource.
      */
+
+    public function __construct()
+    {
+        $this->middleware(['auth:sanctum', 'ability:user-get']);
+    }
+
     public function index()
     {
         return UserResource::collection(User::all());
@@ -36,9 +45,13 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(User $user)
     {
-        return new UserResource(User::where('id', $id)->first());
+        \Log::info('User show called', [
+            'user_id' => $user->id,
+            'auth_user' => auth()->user() ? auth()->user()->id : 'not authenticated',
+        ]);
+        return new UserResource($user);
     }
 
     /**

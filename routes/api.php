@@ -23,12 +23,13 @@ use App\Http\Controllers\TesteController;
 // });
 
 Route::prefix('v1')->group(function () {
-    Route::get('/users', [UserController::class, 'index']);
     Route::apiResource('invoices', InvoiceController::class);
+    Route::get('/users/{user}', [UserController::class, 'show']);
+    Route::get('/users', [UserController::class, 'index']);
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/teste', [TesteController::class, 'index'])->middleware('ability:teste-index');
-        Route::get('/users/{user}', [UserController::class, 'show'])->middleware('ability:user-get');
+        Route::post('/logout', [AuthController::class, 'logout']);
     });
 
     Route::post('/login', [AuthController::class, 'login']);
