@@ -18,7 +18,7 @@ class InvoiceController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth:sanctum', 'ability:invoice-store, user-update')->only(['store', 'update']);
+            $this->middleware(['auth:sanctum', 'ability:invoice-store,user-update'])->only(['store', 'update']);
     }
 
     public function index(Request $request)
